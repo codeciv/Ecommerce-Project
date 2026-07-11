@@ -1,0 +1,42 @@
+-- General Sales Insights
+-- What is the total revenue generated over the entire period?
+
+SELECT SUM(o.quantity * p.price) as revenue 
+FROM orderdetails as o 
+JOIN  products as P 
+ON p.productid=o.productid;
+
+
+-- Revenue Excluding Returned Orders
+SELECT SUM(o.quantity * p.price) as revenue 
+FROM orders as od
+JOIN orderdetails as o 
+JOIN  products as P 
+ON p.productid=o.productid
+WHERE od.IsReturned !=1;
+
+-- Total Revenue per Year / Month
+SELECT
+    YEAR(o.orderdate) AS year,
+    MONTH(o.orderdate) AS month,
+    SUM(od.quantity * p.price) AS monthlyrevenue
+FROM orders AS o
+JOIN orderdetails AS od
+    ON od.orderid = o.orderid
+JOIN products AS p
+    ON p.productid = od.productid
+GROUP BY year, month
+ORDER BY year, month;
+
+
+-- Revenue by Product / Category
+
+SELECT 
+p.productname,
+p.category,
+SUM(o.quantity * p.price) as product_revenue 
+FROM orderdetails as o 
+JOIN  products as P 
+ON p.productid=o.productid
+GROUP BY p.category,p.productname
+ORDER BY p.category,p.productname DESC;
