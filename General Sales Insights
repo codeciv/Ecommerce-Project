@@ -40,3 +40,12 @@ JOIN  products as P
 ON p.productid=o.productid
 GROUP BY p.category,p.productname
 ORDER BY p.category,p.productname DESC;
+
+-- What is the average order value (AOV) across all orders?
+SELECT AVG(totalordervalue) as avg_order_value
+FROM(select o.orderid,sum(od.quantity*p.price)as totalordervalue
+from orders o 
+join orderdetails od on od.orderid=o.orderid
+JOIN products AS p
+    ON p.productid = od.productid
+group by o.orderid)t;
